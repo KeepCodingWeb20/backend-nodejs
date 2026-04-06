@@ -1,0 +1,25 @@
+{
+  "name": "backend-nodejs",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">     <img src=\"https://keepcoding.io/wp-content/uploads/2024/11/Logo-kc237.svg\" alt=\"KeepCoding Web Bootcamp XV - Backend con NodeJS\" width=\"300\"/> </div>",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "example:hello": "node examples/01-hola-node/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KeepCodingWeb20/backend-nodejs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/KeepCodingWeb20/backend-nodejs/issues"
+  },
+  "homepage": "https://github.com/KeepCodingWeb20/backend-nodejs#readme"
+}
