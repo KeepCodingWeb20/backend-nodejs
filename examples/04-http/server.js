@@ -3,9 +3,27 @@ import http from 'node:http';
 const port = 8000;
 const host = '127.0.0.1'; // Es lo mismo que localhost
 
+const tasks = [
+  {
+    "id": 1,
+    "title": "Preparar la clase de asincronia",
+    "done": false
+  },
+  {
+    "id": 2,
+    "title": "Revisar los ejemplos de fs/promises",
+    "done": true
+  },
+  {
+    "id": 3,
+    "title": "Explicar Promise.all en directo",
+    "done": false
+  }
+]
+
 const server = http.createServer((req, res) => {
 
-    console.log(req.headers);
+    //console.log(req.headers);
     console.log(req.url);
 
     const url = new URL(req.url  ?? '/', `http://${req.headers.host ?? 'localhost'}`);
@@ -18,9 +36,23 @@ const server = http.createServer((req, res) => {
         return;
     }
 
+    // TODO: cuando navegamos a /tasks, devolvemos el listado de tareas en formato JSON.
+    if (req.method === 'GET' && url.pathname === '/tasks') {
+        res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8' } );
+        res.end(JSON.stringify(tasks));
+        return;
+    }
+
+    // 1. En / Devolver un contenido legible (HTML)
+    if ( req.method === 'GET' && url.pathname === '/' ) {
+        res.writeHead(200, {'Content-Type': 'text/plain; charset=utf-8' } );
+        res.end('Servidor HTTP funcionando');
+        return;
+    }
+
+    // 2. Asegurarnos que funcionan las rutas que nosotros definimos.
+
     // En cualquier otro caso, va a devolver un texto plano. 'Servidor HTTP funcionando'
-    res.writeHead(200, {'Content-Type': 'text/plain; charset=utf-8' } );
-    res.end('Servidor HTTP funcionando');
 
 
 
@@ -31,6 +63,11 @@ const server = http.createServer((req, res) => {
     //     data: 'Hello World',
     //     serverDate: serverDate
     // }));
+
+    // Handler 404
+    // No tengo ninguna ruta que conteste a la petición
+    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('Ruta no encontrada');
 
 });
 
