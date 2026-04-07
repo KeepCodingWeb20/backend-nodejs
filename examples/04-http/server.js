@@ -37,6 +37,8 @@ const server = http.createServer((req, res) => {
     }
 
     // TODO: cuando navegamos a /tasks, devolvemos el listado de tareas en formato JSON.
+    // TODO: devolver las tareas en formato HTML (una lista de: #id - {Nombre} - [x] / [ ])
+    // Esta lista tiene que ser dinamica.
     if (req.method === 'GET' && url.pathname === '/tasks') {
         res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8' } );
         res.end(JSON.stringify(tasks));
@@ -44,9 +46,29 @@ const server = http.createServer((req, res) => {
     }
 
     // 1. En / Devolver un contenido legible (HTML)
+    // TODO:
+    // Devolver un title
+    // Devolver un content con un <h1> y un <p>
     if ( req.method === 'GET' && url.pathname === '/' ) {
-        res.writeHead(200, {'Content-Type': 'text/plain; charset=utf-8' } );
-        res.end('Servidor HTTP funcionando');
+        res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8' } );
+        res.end(`
+            <!doctype html>
+            <html>
+                <head>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <title>Server HTTP Básico</title>
+                </head>
+                <body>
+                    <h1>Server HTTP basico</h1>
+                    <p>Este ejemplo ya respira web SSR: una ruta HTML, una lista HTML y una ruta de health.</p>
+                    <ul>
+                        <li><a href="/tasks">Lista de tareas</a></li>
+                        <li><a href="/health">Estado de la aplicación</a></li>
+                    </ul>
+                </body>
+            </html>    
+        `);
         return;
     }
 
