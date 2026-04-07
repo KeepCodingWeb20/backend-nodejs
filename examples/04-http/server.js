@@ -32,6 +32,8 @@ import { getTasks } from './tasksRepository.js'
 //   }
 // ]
 
+// En el menu, en tareas debemos mostrar siempre las tareas pendientes
+
 
 
 const server = http.createServer( async (req, res) => {
@@ -61,7 +63,7 @@ const server = http.createServer( async (req, res) => {
         // Que pasaria si no existen tareas?
         // Podriamos llegar a poner un "fallback?"
         res.end(
-            renderPage({
+            await renderPage({
                 title: 'Listado de Tareas',
                 content: `
                     <h1>Listado de Tasks</h1>
@@ -81,7 +83,7 @@ const server = http.createServer( async (req, res) => {
     if ( req.method === 'GET' && url.pathname === '/' ) {
         res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8' } );
         res.end(
-            renderPage({
+            await renderPage({
                 title: 'Server HTTP Básico',
                 content: `
                     <h1>Server HTTP basico</h1>
