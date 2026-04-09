@@ -1,7 +1,8 @@
+import { countPendingTasks } from '../data/tasksRepository.js';
 
-export function homePageController(req, res, next) {
+export async function homePageController(req, res, next) {
     const title = 'Server HTTP Básico';
-    const pendingTasks = 0;
+    const pendingTasks = await countPendingTasks();
     const content = `
         <h1>Server HTTP basico</h1>
         <p>Este ejemplo ya respira web SSR: una ruta HTML, una lista HTML y una ruta de health.</p>
