@@ -32,5 +32,11 @@ app.get('/health', (req, res) => {
     });
 });
 
+// Handler 404
+// Si ha llegado hasta aqui es que no hay ninguna ruta que lo capture
+app.use((req, res) => {
+    res.status(404).send('Resource not found');
+});
+
 
 export default app;
