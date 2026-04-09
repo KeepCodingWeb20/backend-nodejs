@@ -4,6 +4,7 @@ import express from 'express';
 import morgan from 'morgan';
 
 import { pagesRouter } from './routes/pages-routes.js';
+import { utilitesRouter } from './routes/utilities-router.js';
 
 // En app.js inicializamos SOLO la app de express
 const app = express();
@@ -17,6 +18,7 @@ app.use(morgan('tiny'));
 
 // Routes
 app.use('/', pagesRouter);
+app.use('/', utilitesRouter);
 
 
 // Custom middleware
@@ -28,12 +30,6 @@ app.use('/', pagesRouter);
 //     // Un middlware siempre tiene que contestar a la petición o llamar a next();
 //     next();
 // });
-
-app.get('/health', (req, res) => {
-    res.send({
-        status: 'ok!'
-    });
-});
 
 // Handler 404
 // Si ha llegado hasta aqui es que no hay ninguna ruta que lo capture
