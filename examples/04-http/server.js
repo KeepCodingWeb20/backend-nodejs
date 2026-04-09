@@ -40,6 +40,7 @@ const server = http.createServer( async (req, res) => {
 
     //console.log(req.headers);
     console.log(req.url);
+    let error = false;
 
     const url = new URL(req.url  ?? '/', `http://${req.headers.host ?? 'localhost'}`);
 
@@ -57,47 +58,55 @@ const server = http.createServer( async (req, res) => {
     if (req.method === 'GET' && url.pathname === '/tasks') {
         // res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8' } );
         // res.end(JSON.stringify(tasks));
-        const tasks = await getTasks();
+        try {
 
-        const status = url.searchParams.get('status') ?? 'all';
-        
-        let filteredTasks;
-        if (status === 'pending') {
-            filteredTasks = tasks.filter(t => t.done === false);
-        } else if (status === 'done') {
-            filteredTasks = tasks.filter(t => t.done === true);
-        } else {
-            filteredTasks = tasks;
+            const tasks = await getTasks();
+
+            const status = url.searchParams.get('status') ?? 'all';
+            
+            let filteredTasks;
+            if (status === 'pending') {
+                filteredTasks = tasks.filter(t => t.done === false);
+            } else if (status === 'done') {
+                filteredTasks = tasks.filter(t => t.done === true);
+            } else {
+                filteredTasks = tasks;
+            }
+
+            // console.log(req.url); // En node:http el objeto request no parsea la URL
+
+            // TODO: Si existe el parametro status: pending / done / all, filtrar por su estado.
+
+            // TODO: implementar un pequeño menu debajo del título para poder aplicar los filtros de esta pagina.
+
+            const htmlTasks = filteredTasks.map(t => `<li>#${t.id} - ${t.title} - [${t.done ? 'x' : ' '}] </li>`).join('');
+            res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8' } );
+            // Que pasaria si no existen tareas?
+            // Podriamos llegar a poner un "fallback?"
+            res.end(
+                await renderPage({
+                    title: 'Listado de Tareas',
+                    content: `
+                        <h1>Listado de Tasks</h1>
+                        <p>Filtrar tareas:</p>
+                        <nav>
+                            <a href="/tasks?status=all">Todas las tareas</a>
+                            <a href="/tasks?status=pending">Pendientes</a>
+                            <a href="/tasks?status=done">Finalizadas</a>
+                        </nav>
+                        <ul>
+                            ${htmlTasks.length === 0 ? '<li>No se han encontrado tareas</li>' : htmlTasks}
+                        </ul>
+                    `
+                })
+            );
+            return;
+
+        } catch(ex) {
+            console.log(ex);
+            error = true;
         }
 
-        // console.log(req.url); // En node:http el objeto request no parsea la URL
-
-        // TODO: Si existe el parametro status: pending / done / all, filtrar por su estado.
-
-        // TODO: implementar un pequeño menu debajo del título para poder aplicar los filtros de esta pagina.
-
-        const htmlTasks = filteredTasks.map(t => `<li>#${t.id} - ${t.title} - [${t.done ? 'x' : ' '}] </li>`).join('');
-        res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8' } );
-        // Que pasaria si no existen tareas?
-        // Podriamos llegar a poner un "fallback?"
-        res.end(
-            await renderPage({
-                title: 'Listado de Tareas',
-                content: `
-                    <h1>Listado de Tasks</h1>
-                    <p>Filtrar tareas:</p>
-                    <nav>
-                        <a href="/tasks?status=all">Todas las tareas</a>
-                        <a href="/tasks?status=pending">Pendientes</a>
-                        <a href="/tasks?status=done">Finalizadas</a>
-                    </nav>
-                    <ul>
-                        ${htmlTasks.length === 0 ? '<li>No se han encontrado tareas</li>' : htmlTasks}
-                    </ul>
-                `
-            })
-        );
-        return;
     }
 
     // 1. En / Devolver un contenido legible (HTML)
@@ -105,17 +114,22 @@ const server = http.createServer( async (req, res) => {
     // Devolver un title
     // Devolver un content con un <h1> y un <p>
     if ( req.method === 'GET' && url.pathname === '/' ) {
-        res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8' } );
-        res.end(
-            await renderPage({
-                title: 'Server HTTP Básico',
-                content: `
-                    <h1>Server HTTP basico</h1>
-                    <p>Este ejemplo ya respira web SSR: una ruta HTML, una lista HTML y una ruta de health.</p>
-                `
-            })
-        );
-        return;
+        try {
+            res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8' } );
+            res.end(
+                await renderPage({
+                    title: 'Server HTTP Básico',
+                    content: `
+                        <h1>Server HTTP basico</h1>
+                        <p>Este ejemplo ya respira web SSR: una ruta HTML, una lista HTML y una ruta de health.</p>
+                    `
+                })
+            );
+            return;
+        } catch(ex) {
+            console.log(ex);
+            error = true;
+        }
     }
 
     // 2. Asegurarnos que funcionan las rutas que nosotros definimos.
@@ -132,8 +146,18 @@ const server = http.createServer( async (req, res) => {
     //     serverDate: serverDate
     // }));
 
+    // TODO: Captura de errores
+    // Debemos capturar ese posible error
+    // Devolver un error 500
+    if (error) {
+        res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end('Internal Server Error');
+        return;
+    }
+
     // Handler 404
     // No tengo ninguna ruta que conteste a la petición
+    // EL orden importa. siempre tiene que ir el ultimo
     res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end('Ruta no encontrada');
 
