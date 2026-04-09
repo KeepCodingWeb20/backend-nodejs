@@ -1,16 +1,23 @@
-import express from 'express';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import express from 'express';
 import morgan from 'morgan';
+
+import { pagesRouter } from './routes/pages-routes.js';
 
 // En app.js inicializamos SOLO la app de express
 const app = express();
 const appDir = dirname(fileURLToPath(import.meta.url));
 // const appDir = dirname(import.meta.url);
 
+// Global Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(appDir, '../public')));
 app.use(morgan('tiny'));
+
+// Routes
+app.use('/', pagesRouter);
+
 
 // Custom middleware
 // Para todas las peticiones
@@ -21,10 +28,6 @@ app.use(morgan('tiny'));
 //     // Un middlware siempre tiene que contestar a la petición o llamar a next();
 //     next();
 // });
-
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
 
 app.get('/health', (req, res) => {
     res.send({
