@@ -1,4 +1,4 @@
-import { countPendingTasks, getTasks } from '../data/tasksRepository.js';
+import { addNewTask, countPendingTasks, getTasks } from '../data/tasksRepository.js';
 
 export async function newTaskPageController(req, res, next) {
     const title = 'Crear Nueva Tarea';
@@ -6,13 +6,34 @@ export async function newTaskPageController(req, res, next) {
     res.render('new-task.html', {
         title: title,
         pendingTasks: pendingTasks,
+        errorMessage: null,
+        values: {},
     });
 }
 
 export async function createTaskController(req, res, next) {
-    const newTask = req.body;
-    console.log(newTask);
-    res.redirect('/tasks/new');
+    const title = 'Crear Nueva Tarea';
+    const pendingTasks = await countPendingTasks();
+
+    if ( !req.body.title || req.body.title === '' ) {
+        // El usuario debe acabar de insertar los datos
+        const errorMessage = 'El título es obligatorio';
+        res.render('new-task.html', {
+            title: title,
+            pendingTasks: pendingTasks,
+            errorMessage, errorMessage,
+            values: req.body
+        });
+        return;
+    }
+
+    const newTask = {
+      title: req.body.title,
+      done: req.body.done === 'on' ? true : false // req.body.done!!
+    };
+    const createdTask = await addNewTask(newTask);
+    console.log(createdTask);
+    res.redirect('/tasks/');
 }
 
 // TODO
