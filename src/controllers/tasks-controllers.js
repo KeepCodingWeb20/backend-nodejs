@@ -21,7 +21,7 @@ export async function createTaskController(req, res, next) {
         res.render('new-task.html', {
             title: title,
             pendingTasks: pendingTasks,
-            errorMessage, errorMessage,
+            errorMessage: errorMessage,
             values: req.body
         });
         return;
@@ -64,5 +64,33 @@ export async function tasksPageController(req, res, next) {
         pendingTasks: pendingTasks,
         // htmlTasks: htmlTasks,
         tasks: filteredTasks,
+    });
+}
+
+export async function taskPageController(req, res, next) {
+    const taskId = Number(req.params.taskId); // Los req.params siempre son string
+    const params = req.params;
+
+    const title = 'Detalle de Tarea';
+    const pendingTasks = await countPendingTasks();
+    // Obtener la tarea
+    const tasks = await getTasks();
+    const task = tasks.find(i => i.id === taskId);
+
+    if (!task) {
+        // Devolver 404
+        next();
+        return;
+    }
+
+    // Pasar los datos a la plantilla
+    res.render('new-task.html', {
+        title: title,
+        pendingTasks: pendingTasks,
+        errorMessage: null,
+        values: {
+            title: task.title,
+            done: task.done ? 'on' : ''
+        }
     });
 }
