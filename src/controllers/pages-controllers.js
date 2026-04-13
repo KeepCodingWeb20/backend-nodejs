@@ -1,6 +1,9 @@
 import { countPendingTasks } from '../data/tasksRepository.js';
 
 export async function homePageController(req, res, next) {
+    res.render('index.html');
+    // TODO: Refactorizar
+    return;
     res.locals.title = 'Server HTTP Básico';
     res.locals.pendingTasks = await countPendingTasks();
     res.locals.content = `
