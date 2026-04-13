@@ -1,0 +1,29 @@
+<%- include('partials/page-start.html') %>
+
+<h1>Nueva Tarea</h1>
+
+<section class="card">
+    <div class="card-body">
+
+        <form method="POST" action="/tasks">
+
+            <label for="title">Título</label>
+            <input
+                type="text"
+                id="title"
+                name="title"
+                placeholder="Preparar el formulario de creación de tarea"
+            >
+
+            <label for="done">Hecho</label>
+            <input type="checkbox" name="done" id="done">
+
+            <button type="submit">Guardar Tarea</button>
+
+        </form>
+
+    </div>
+</section>
+
+
+<%- include('partials/page-end.html') %>

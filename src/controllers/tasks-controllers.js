@@ -1,5 +1,19 @@
 import { countPendingTasks, getTasks } from '../data/tasksRepository.js';
 
+export async function newTaskPageController(req, res, next) {
+    const title = 'Crear Nueva Tarea';
+    const pendingTasks = await countPendingTasks();
+    res.render('new-task.html', {
+        title: title,
+        pendingTasks: pendingTasks,
+    });
+}
+
+export async function createTaskController(req, res, next) {
+    const newTask = req.body;
+    console.log(newTask);
+    res.redirect('/tasks/new');
+}
 
 // TODO
 // Refactorizar este controlador para utilizar el "motor de plantillas" que hemos generado con el middleware
