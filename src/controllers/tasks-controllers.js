@@ -1,4 +1,4 @@
-import { addNewTask, countPendingTasks, getTasks, updateTask } from '../data/tasksRepository.js';
+import { addNewTask, countPendingTasks, deleteTask, getTasks, updateTask } from '../data/tasksRepository.js';
 
 export async function newTaskPageController(req, res, next) {
     const title = 'Crear Nueva Tarea';
@@ -137,4 +137,20 @@ export async function editTaskController(req, res, next) {
 
     // Devolver algo -> redirect
     res.redirect('/tasks');
+}
+
+export async function deleteTaskController(req, res, next) {
+    // Obtener la tarea
+    const taskId = Number(req.params.taskId); 
+    const tasks = await getTasks();
+    const task = tasks.find(i => i.id === taskId);
+    if (!task) {
+        // Devolver 404
+        next();
+        return;
+    };
+
+    const newTasks = await deleteTask(taskId);
+
+    res.json(newTasks);
 }

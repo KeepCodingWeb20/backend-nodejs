@@ -31,8 +31,38 @@
 
         </form>
 
+        <% if (values.id) { %>
+             <button id="deleteBtn">Eliminar Tarea</button>
+        <% } %>
+
     </div>
 </section>
+
+<script>
+    // Detectar cuando se presiona el botón
+    const btnElement = document.querySelector('#deleteBtn');
+    // console.log(btnElement);
+
+    // Conocer el id
+    const taskId = "<%= values.id %>";
+
+    // Llamar a una url con ese id (DELETE /tasks/id)
+    btnElement.addEventListener('click', () => {
+        // Todo lo que metamos aqui dentro, se ejecutará con el click
+        const options = {
+            method: "DELETE"
+        };
+
+        fetch("/tasks/" + taskId, options)
+            .then(response => response.json())
+            .then(data => {
+                /** Procesar los datos **/
+                // console.log(data);
+                window.location.href = '/tasks'; // Navegamos mediante JS a la pagina de tareas
+            });
+    });
+
+</script>
 
 
 <%- include('partials/page-end.html') %>

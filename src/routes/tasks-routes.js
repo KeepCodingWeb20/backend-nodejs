@@ -1,5 +1,5 @@
 import express from 'express';
-import { createTaskController, tasksPageController, newTaskPageController, taskPageController, editTaskController } from '../controllers/tasks-controllers.js';
+import { createTaskController, tasksPageController, newTaskPageController, taskPageController, editTaskController, deleteTaskController } from '../controllers/tasks-controllers.js';
 
 // El router YA INCLUYE la ruta declarada en app.
 export const tasksRouter = express.Router();
@@ -24,3 +24,6 @@ tasksRouter.get('/', tasksPageController);
 tasksRouter.get('/:taskId', taskPageController);
 tasksRouter.post('/edit/:taskId', editTaskController);
 
+// D:
+tasksRouter.delete('/:taskId', deleteTaskController); // Requeriria lanzar la petición con JS
+// tasksRouter.post('/delete/:taskId', editTaskController);
