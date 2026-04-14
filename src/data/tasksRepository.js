@@ -1,7 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { ObjectId } from 'mongodb';
 
-import { dbClient } from '../lib/database.js';
+import { Task } from '../models/task-model.js';
+const dbClient = {};
 
 
 const COLLECTION = 'tasks';
@@ -10,7 +11,8 @@ export async function getTasks() {
     //     const fileUrl = new URL('./tasks.json', import.meta.url);
     //     const fileContents = await readFile(fileUrl);
     //     return JSON.parse(fileContents);
-    const result = await dbClient.collection(COLLECTION).find({}).toArray();
+    // const result = await dbClient.collection(COLLECTION).find({}).toArray();
+    const result = Task.find({});
     console.log(result);
     return result;
 }
@@ -18,7 +20,10 @@ export async function getTasks() {
 export async function countPendingTasks() {
 // const tasks = await getTasks();
 // return tasks.filter(task => task.done === false).length;
-    const count = await dbClient.collection(COLLECTION).countDocuments({
+    // const count = await dbClient.collection(COLLECTION).countDocuments({
+    //     done: false,
+    // });
+    const count = Task.countDocuments({
         done: false,
     });
     return count;
