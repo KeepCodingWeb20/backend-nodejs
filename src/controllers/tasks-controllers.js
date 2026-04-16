@@ -1,7 +1,6 @@
-import { addNewTask, countPendingTasks, deleteTask, getTask, getTasks, updateTask } from '../data/tasksRepository.js';
+import { addNewTask, countPendingTasks, deleteTask, getTask, getTasks, updateTask, getTaskByUser } from '../data/tasksRepository.js';
 
 export async function newTaskPageController(req, res, next) {
-    console.log(req.session.userId);
     const title = 'Crear Nueva Tarea';
     res.render('task.html', {
         title: title,
@@ -12,6 +11,7 @@ export async function newTaskPageController(req, res, next) {
 
 export async function createTaskController(req, res, next) {
     const title = 'Crear Nueva Tarea';
+    const userId = req.session.userId;
 
     if ( !req.body.title || req.body.title === '' ) {
         // El usuario debe acabar de insertar los datos
@@ -26,7 +26,8 @@ export async function createTaskController(req, res, next) {
 
     const newTask = {
       title: req.body.title,
-      done: req.body.done === 'on' ? true : false // req.body.done!!
+      done: req.body.done === 'on' ? true : false ,// req.body.done!!
+      owner: userId,
     };
     const createdTask = await addNewTask(newTask);
     res.redirect('/tasks/');
@@ -35,8 +36,9 @@ export async function createTaskController(req, res, next) {
 // TODO
 // Refactorizar este controlador para utilizar el "motor de plantillas" que hemos generado con el middleware
 export async function tasksPageController(req, res, next) {
+    const userId = req.session.userId;
     const title = 'Listado de Tareas';
-    const tasks = await getTasks();
+    const tasks = await getTaskByUser(userId);
     console.log(tasks);
     // TODO: implementa el done[x] o [ ] en la vista de ejs
     // let htmlTasks = tasks.map(t => `<li>#${t.id} - ${t.title} - [${t.done ? 'x' : ' '}] </li>`).join('');
@@ -112,6 +114,8 @@ export async function editTaskController(req, res, next) {
         });
         return;
     }
+
+    // TODO: Verificar que esta tarea es mia.
 
     // Actualizar la tarea
     await updateTask(

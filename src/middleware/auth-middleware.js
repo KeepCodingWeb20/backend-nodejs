@@ -3,6 +3,16 @@ import ConnectMongo from 'connect-mongo';
 
 const INACTIVITY_2_DAYS = 1000 * 60 * 60 * 24 * 2;
 
+export function guard(req, res, next) {
+    const redirectUrl = '/login?redirect=' + encodeURIComponent(req.originalUrl);
+    if (!req.session.userId) {
+        // No hay login
+        res.redirect(redirectUrl);
+        return;
+    }
+    next();
+}
+
 export const sessionMiddleware = session({
     name: 'kc20-nodejs',
     secret: process.env.SESSION_SECRET || 'secret',

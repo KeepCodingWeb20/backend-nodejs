@@ -10,6 +10,8 @@ export async function loginPageController(req, res, next) {
 
 export async function loginActionController(req, res, next) {
 
+    const redirectUrl = req.query.redirect;
+
     if (
         !req.body.email ||
         req.body.email === '' ||
@@ -48,7 +50,7 @@ export async function loginActionController(req, res, next) {
     // Tenemos usuario, y su pw es correcto
     req.session.userId = user.id;
 
-    res.redirect('/');
+    res.redirect(redirectUrl || '/');
 
 }
 

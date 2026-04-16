@@ -1,5 +1,6 @@
 import express from 'express';
 import { createTaskController, tasksPageController, newTaskPageController, taskPageController, editTaskController, deleteTaskController } from '../controllers/tasks-controllers.js';
+import { guard } from '../middleware/auth-middleware.js';
 
 // El router YA INCLUYE la ruta declarada en app.
 export const tasksRouter = express.Router();

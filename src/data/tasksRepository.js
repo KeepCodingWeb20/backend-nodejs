@@ -18,6 +18,12 @@ export async function getTasks() {
     return result;
 }
 
+export async function getTaskByUser(userId) {
+    return Task.find({
+        owner: userId
+    });
+}
+
 export async function countPendingTasks() {
 // const tasks = await getTasks();
 // return tasks.filter(task => task.done === false).length;
@@ -58,7 +64,7 @@ export async function addNewTask(task) {
     return newTask;
 }
 
-export async function updateTask(taskId, updatedTask) {
+export async function updateTask(taskId, updatedTask, ownerId) {
     // Obtener el fichero
     // const tasks = await getTasks();
 
@@ -84,15 +90,26 @@ export async function updateTask(taskId, updatedTask) {
     //     );
 
     // Seria lo mismo que hacer task.find -> actualiazr propiedades -> task.save
-
-    const task = await Task.findByIdAndUpdate(taskId, 
+    const task = await Task.findOneAndUpdate(
+        {
+            _id: taskId,
+            owner: ownerId
+        },
         {
             $set: {
                 title: updatedTask.title,
                 done: updatedTask.done,
             }
         }
-    );
+    )
+    // const task = await Task.findByIdAndUpdate(taskId, 
+    //     {
+    //         $set: {
+    //             title: updatedTask.title,
+    //             done: updatedTask.done,
+    //         }
+    //     }
+    // );
 
     return task;
 }
