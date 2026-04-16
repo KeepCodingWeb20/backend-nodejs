@@ -1,6 +1,7 @@
 import { addNewTask, countPendingTasks, deleteTask, getTask, getTasks, updateTask } from '../data/tasksRepository.js';
 
 export async function newTaskPageController(req, res, next) {
+    console.log(req.session.userId);
     const title = 'Crear Nueva Tarea';
     res.render('task.html', {
         title: title,

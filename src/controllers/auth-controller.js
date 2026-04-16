@@ -46,9 +46,7 @@ export async function loginActionController(req, res, next) {
     }
 
     // Tenemos usuario, y su pw es correcto
-    // req.session.userId = user._id;
-    // TMP
-    res.locals.userId = user.id;
+    req.session.userId = user.id;
 
     res.redirect('/');
 
