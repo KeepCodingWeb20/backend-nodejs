@@ -1,35 +1,27 @@
 <%- include('partials/page-start.html') %>
 
-<h1><%= title %></h1>
+    <h1>
+        <%= title %>
+    </h1>
 
-<section class="card">
-    <section class="card-body">
-
-        <% if (errorMessage) { %>
-            <span><%= errorMessage %></span>
-        <% } %>
-
-        <form method="POST" action="/login">
-
-            <label for="email">Correo electónico</label>
-            <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="email@example.org"
-                value="<%= values.email ?? '' %>"
-            >
-
-            <label for="password">Contraseña</label>
-            <input
-                type="password"
-                id="password"
-                name="password"
-            >
-
-            <button type="submit">Iniciar sesión</button>
-
-        </form>
-
-    </section>
-</section>
+    <div class="card">
+        <div class="card-body">
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo electónico</label>
+                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
+                        placeholder="email@example.org" value="<%= values.email ?? '' %>">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password">
+                </div>
+                <% if (errorMessage) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= errorMessage %>
+                    </div>
+                    <% } %>
+                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>

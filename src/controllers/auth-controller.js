@@ -10,6 +10,7 @@ export async function loginPageController(req, res, next) {
 
 export async function loginActionController(req, res, next) {
 
+    console.log(req.query);
     const redirectUrl = req.query.redirect;
 
     if (
