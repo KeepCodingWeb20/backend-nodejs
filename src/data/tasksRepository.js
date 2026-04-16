@@ -13,7 +13,6 @@ export async function getTasks() {
     //     return JSON.parse(fileContents);
     // const result = await dbClient.collection(COLLECTION).find({}).toArray();
     const result = Task.find({});
-    console.log(result);
     return result;
 }
 
@@ -30,9 +29,10 @@ export async function countPendingTasks() {
 }
 
 export async function getTask(_id) {
-    const task = await dbClient.collection(COLLECTION).findOne({
-        _id: new ObjectId(_id),
-    });
+    // const task = await dbClient.collection(COLLECTION).findOne({
+    //     _id: new ObjectId(_id),
+    // });
+    const task = await Task.findById(_id);
     return task;
 }
 
@@ -50,7 +50,9 @@ export async function addNewTask(task) {
     // await writeFile(fileUrl, JSON.stringify(tasks));
     // Devolver el objeto creado
     // { id: 5, title: 'Crear la funcion new task', done: false }
-    const newTask = await dbClient.collection(COLLECTION).insertOne(task);
+    // const newTask = await dbClient.collection(COLLECTION).insertOne(task);
+    const newTask = new Task(task);
+    await newTask.save();
     return newTask;
 }
 
@@ -68,16 +70,28 @@ export async function updateTask(taskId, updatedTask) {
     // const fileUrl = new URL('./tasks.json', import.meta.url);
     // await writeFile(fileUrl, JSON.stringify(tasks));
 
-    const task = await dbClient.collection(COLLECTION)
-        .updateOne(
-            { _id: new ObjectId(taskId) },
-            {
-                $set: {
-                    title: updatedTask.title,
-                    done: updatedTask.done,
-                }
+    // const task = await dbClient.collection(COLLECTION)
+    //     .updateOne(
+    //         { _id: new ObjectId(taskId) },
+    //         {
+    //             $set: {
+    //                 title: updatedTask.title,
+    //                 done: updatedTask.done,
+    //             }
+    //         }
+    //     );
+
+    // Seria lo mismo que hacer task.find -> actualiazr propiedades -> task.save
+
+    const task = await Task.findByIdAndUpdate(taskId, 
+        {
+            $set: {
+                title: updatedTask.title,
+                done: updatedTask.done,
             }
-        );
+        }
+    );
+
     return task;
 }
 
@@ -93,8 +107,9 @@ export async function deleteTask(taskId) {
     // const newTasks = tasks.splice(taskIdx, 1);
     // const fileUrl = new URL('./tasks.json', import.meta.url);
     // await writeFile(fileUrl, JSON.stringify(tasks));
-    const deleteResult = dbClient.collection(COLLECTION).deleteOne({
-        _id: new ObjectId(taskId),
-    })
+    // const deleteResult = dbClient.collection(COLLECTION).deleteOne({
+    //     _id: new ObjectId(taskId),
+    // });
+    const deleteResult = Task.findByIdAndDelete(taskId);
     return deleteResult;
 }
