@@ -1,0 +1,31 @@
+<%- include('partials/page-start.html') %>
+
+<h1><%= title %></h1>
+
+<section class="card">
+    <section class="card-body">
+
+        <form method="POST" action="/login">
+
+            <label for="email">Correo electónico</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="email@example.org"
+                value="<%= values.email ?? '' %>"
+            >
+
+            <label for="password">Correo electónico</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+            >
+
+            <button type="submit">Iniciar sesión</button>
+
+        </form>
+
+    </section>
+</section>

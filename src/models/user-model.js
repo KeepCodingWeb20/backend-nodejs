@@ -18,6 +18,7 @@ const userSchema = new Schema(
         },
         password: {
             type: String, // Guardar encriptado
+            select: false,
         }
     },
     {

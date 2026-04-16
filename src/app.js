@@ -7,6 +7,7 @@ import ejs from 'ejs';
 import { pagesRouter } from './routes/pages-routes.js';
 import { utilitesRouter } from './routes/utilities-router.js';
 import { tasksRouter } from './routes/tasks-routes.js';
+import { authRouter } from './routes/auth-router.js';
 
 // En app.js inicializamos SOLO la app de express
 const app = express();
@@ -26,6 +27,7 @@ app.set('views', join(appDir, 'views'));
 // Routes
 app.use('/', pagesRouter);
 app.use('/', utilitesRouter);
+app.use('/', authRouter);
 app.use('/tasks', tasksRouter);
 // 1. Task router
 

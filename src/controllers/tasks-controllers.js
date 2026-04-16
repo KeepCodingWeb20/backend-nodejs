@@ -41,6 +41,7 @@ export async function tasksPageController(req, res, next) {
     const title = 'Listado de Tareas';
     const pendingTasks = await countPendingTasks();
     const tasks = await getTasks();
+    console.log(tasks);
     // TODO: implementa el done[x] o [ ] en la vista de ejs
     // let htmlTasks = tasks.map(t => `<li>#${t.id} - ${t.title} - [${t.done ? 'x' : ' '}] </li>`).join('');
     // htmlTasks = htmlTasks.length === 0 ? '<li>No se han encontrado tareas</li>' : htmlTasks;

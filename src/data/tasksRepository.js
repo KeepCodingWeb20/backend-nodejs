@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { ObjectId } from 'mongodb';
 
 import { Task } from '../models/task-model.js';
+import { User } from '../models/user-model.js';
 const dbClient = {};
 
 
@@ -12,7 +13,8 @@ export async function getTasks() {
     //     const fileContents = await readFile(fileUrl);
     //     return JSON.parse(fileContents);
     // const result = await dbClient.collection(COLLECTION).find({}).toArray();
-    const result = Task.find({});
+    const result = Task.find({})
+    //    .populate('owner'); // De esta manera podemos obtener todos los owner en la misma consulta
     return result;
 }
 
